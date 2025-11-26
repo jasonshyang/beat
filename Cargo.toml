@@ -1,0 +1,17 @@
+[package]
+name = "beat"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+rodio = "0.21.1"
+ratatui = "0.29.0"
+anyhow = "1.0.100"
+crossbeam-channel = "0.5.15"
+clap = { version = "4.5.53", features = ["derive"] }
+lofty = "0.22.4"
+encoding_rs = "0.8.35"
+
+[[bin]]
+name = "beat"
+path = "src/main.rs"
