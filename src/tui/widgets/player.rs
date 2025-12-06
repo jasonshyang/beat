@@ -8,9 +8,9 @@ use ratatui::{
     widgets::Paragraph,
 };
 
-use crate::{app::PlayerState, tui::theme::Theme};
+use crate::{app::PlaybackState, tui::theme::Theme};
 
-pub fn render_player(frame: &mut Frame, area: Rect, state: &PlayerState, theme: &Theme) {
+pub fn render_player(frame: &mut Frame, area: Rect, state: &PlaybackState, theme: &Theme) {
     // Split into two rows: title and progress
     let chunks = Layout::default()
         .direction(Direction::Vertical)
@@ -44,7 +44,7 @@ pub fn render_player(frame: &mut Frame, area: Rect, state: &PlayerState, theme: 
 
         parts.join("")
     } else {
-        format!("[♫] No Track")
+        "[♫] No Track".to_string()
     };
 
     let title_line = Line::from(Span::styled(
@@ -63,11 +63,7 @@ pub fn render_player(frame: &mut Frame, area: Rect, state: &PlayerState, theme: 
     let status_len = status_icon.len();
 
     let (time_text, ratio) = if let Some((elapsed, total)) = state.current_track_progress() {
-        let text = format!(
-            " {} / {} ",
-            format_duration(elapsed),
-            format_duration(total)
-        );
+        let text = format!(" {} / {} ", format_duration(elapsed), format_duration(total));
         let r = (elapsed.as_secs_f64() / total.as_secs_f64()).clamp(0.0, 1.0);
         (text, r)
     } else {

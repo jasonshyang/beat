@@ -10,9 +10,9 @@ use ratatui::{
 };
 
 use crate::{
-    app::Beat,
+    app::{Beat, MusicState},
     domain::{AudioPlayer, Library},
-    tui::render,
+    tui::{render, theme::Theme},
 };
 
 const INTERVAL: Duration = Duration::from_millis(10);
@@ -24,13 +24,18 @@ pub fn run_player(start_dir: Option<PathBuf>) -> anyhow::Result<()> {
     let backend = CrosstermBackend::new(stdout);
     let mut terminal = Terminal::new(backend)?;
 
+    let theme = Theme::default();
     let library = Library::new(start_dir)?;
     let player = AudioPlayer::run_in_thread()?;
-    let mut beat = Beat::new(player, library);
+    let (playlists, config_path) = MusicState::load_playlists().unwrap_or_else(|_| {
+        eprintln!("Warning: Could not load playlists, starting with empty list");
+        MusicState::load_playlists().unwrap()
+    });
+    let mut beat = Beat::new(player, library, playlists, config_path);
 
     loop {
         beat.tick();
-        terminal.draw(|f| render::render(f, &beat))?;
+        terminal.draw(|f| render::render(f, &beat, &theme))?;
 
         if event::poll(INTERVAL)?
             && let event::Event::Key(key) = event::read()?

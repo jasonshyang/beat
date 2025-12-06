@@ -5,10 +5,17 @@ use ratatui::{
     widgets::{Block, Borders, Paragraph},
 };
 
-use crate::{app::Tab, tui::theme::Theme};
+use crate::{
+    app::Tab,
+    tui::{text::TuiText, theme::Theme},
+};
 
 pub fn render_tabs(frame: &mut Frame, area: Rect, current_tab: Tab, theme: &Theme) {
-    let tabs = [("1", "Browse", Tab::Browse), ("2", "Queue", Tab::Queue)];
+    let tabs = [
+        ("1", TuiText::TAB_BROWSE, Tab::Browse),
+        ("2", TuiText::TAB_QUEUE, Tab::Queue),
+        ("3", TuiText::TAB_PLAYLIST, Tab::Playlist),
+    ];
 
     let spans: Vec<Span> = tabs
         .iter()

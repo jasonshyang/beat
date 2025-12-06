@@ -1,3 +1,5 @@
 pub mod render;
 pub mod theme;
-pub mod widgets;
+
+mod text;
+mod widgets;
