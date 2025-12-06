@@ -89,6 +89,7 @@ impl Beat {
             Action::NavigateBack => self.handle_navigate_back(),
             Action::PlayNext => self.play_next()?,
             Action::PlayPause => self.playback.toggle_play_pause()?,
+            Action::SelectAll => self.select_all(),
             Action::AddAllToQueue => self.add_all_to_queue()?,
             Action::Enter => self.execute_enter()?,
             Action::GoToDirectory => self.go_to_directory(),
@@ -188,6 +189,13 @@ impl Beat {
             self.play_next()?;
         }
         Ok(())
+    }
+
+    /// Selects all items in the current directory
+    fn select_all(&mut self) {
+        if self.view.current_tab == Tab::Browse {
+            self.view.select_all_browser(&self.music);
+        }
     }
 
     // ===== Enter Key Handlers =====

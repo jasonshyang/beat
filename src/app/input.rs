@@ -17,6 +17,7 @@ pub enum Action {
     MoveUp { toggle_multi_select: bool },
     MoveDown { toggle_multi_select: bool },
     NavigateBack,
+    SelectAll,
 
     // Playback control
     PlayNext,
@@ -118,6 +119,7 @@ fn handle_normal_mode(view: &ViewState, key: KeyEvent) -> Action {
         KeyCode::Char('1') => Action::SwitchTab(Tab::Browse),
         KeyCode::Char('2') => Action::SwitchTab(Tab::Queue),
         KeyCode::Char('3') => Action::SwitchTab(Tab::Playlist),
+        KeyCode::Char('A') => Action::SelectAll,
         KeyCode::Char('a') => Action::AddAllToQueue,
         KeyCode::Char('n') => Action::PlayNext,
         KeyCode::Char('c') => handle_c_key(view),

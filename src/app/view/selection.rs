@@ -139,6 +139,14 @@ impl SelectionState {
     /// Clears the browser multi-selection
     pub fn clear_browser_multi_select(&mut self) { self.browser_multi_select.clear(); }
 
+    /// Selects all items in the browser
+    pub fn select_all_browser(&mut self, total_items: usize) {
+        self.browser_multi_select.clear();
+        for i in 0..total_items {
+            self.browser_multi_select.insert(i);
+        }
+    }
+
     /// Returns whether there are any multi-selected items
     pub fn has_multi_selection(&self) -> bool { !self.browser_multi_select.is_empty() }
 

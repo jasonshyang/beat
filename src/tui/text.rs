@@ -18,6 +18,7 @@ impl TuiText {
         ("[↑↓/jk]", "move"),
         ("[1/2/3]", "switch tab"),
         ("[Enter]", "select"),
+        ("[Shift+A]", "select all (Browse tab)"),
         ("[g]", "go to directory (Browse tab)"),
         ("[Esc]", "back"),
     ];
@@ -42,8 +43,8 @@ impl TuiText {
 
     // Browser
     pub const BROWSER_HINT_NORMAL: &'static str =
-        "Files • [Enter] queue/open • [a] add all • [p] add to playlist...";
-    pub const BROWSER_HINT_MULTI_SELECT: &'static str = "Files • [Shift+↑↓] multi-select • [Enter] queue selected • [p] add selected to playlist...";
+        "Files • [Enter] queue/open • [a] add all • [Shift+A] select all • [p] add to playlist...";
+    pub const BROWSER_HINT_MULTI_SELECT: &'static str = "Files • [Shift+↑↓] multi-select • [Shift+A] select all • [Enter] queue selected • [p] add selected to playlist...";
 
     // Queue
     pub const QUEUE_TITLE: &'static str = "Queue • [Enter] skip to • [s] shuffle • [c] clear";

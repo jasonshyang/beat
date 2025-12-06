@@ -90,6 +90,12 @@ impl ViewState {
     /// Clears the browser multi-selection
     pub fn clear_browser_multi_select(&mut self) { self.selection.clear_browser_multi_select(); }
 
+    /// Selects all items in the browser
+    pub fn select_all_browser(&mut self, music: &MusicState) {
+        let total_items = music.library_len();
+        self.selection.select_all_browser(total_items);
+    }
+
     /// Returns whether there are any multi-selected items
     pub fn has_multi_selection(&self) -> bool { self.selection.has_multi_selection() }
 
