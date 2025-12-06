@@ -233,10 +233,10 @@ impl MusicState {
 
         Ok((playlists, config_path))
     }
-    /// Get config file path: ~/Documents/beat/playlists.toml
+    /// Get config file path: ~/.config/beat/playlists.toml
     fn playlists_config_path() -> Result<PathBuf> {
-        let doc_dir = dirs::document_dir()
-            .context("Could not determine documents directory for playlists")?;
-        Ok(doc_dir.join("beat-config").join("playlists.toml"))
+        let home_dir = dirs::home_dir()
+            .context("Could not determine home directory for playlists")?;
+        Ok(home_dir.join(".config").join("beat").join("playlists.toml"))
     }
 }
