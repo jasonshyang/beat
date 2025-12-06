@@ -1,7 +1,10 @@
-pub mod beat;
-pub mod player;
-pub mod view;
+mod beat;
+mod input;
+mod music;
+mod player;
+mod view;
 
 pub use beat::*;
-pub use player::PlayerState;
-pub use view::{Tab, ViewState};
+pub use music::MusicState;
+pub use player::PlaybackState;
+pub use view::{PlaylistView, Tab, ViewState};

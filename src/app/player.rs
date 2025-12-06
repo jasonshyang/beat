@@ -9,7 +9,7 @@ use crate::domain::{AudioHandle, Track};
 ///
 /// Manages current track, playback timing, pause/resume state, and audio
 /// control.
-pub struct PlayerState {
+pub struct PlaybackState {
     /// Currently playing track, if any
     pub current_track: Option<Track>,
     /// Timestamp when the current track started playing
@@ -18,11 +18,12 @@ pub struct PlayerState {
     pub paused_at: Option<Instant>,
     /// History of previously played tracks
     pub play_history: VecDeque<Track>,
+
     /// Audio handle for controlling playback
     audio: AudioHandle,
 }
 
-impl PlayerState {
+impl PlaybackState {
     /// Creates a new PlayerState with the given audio handle
     pub fn new(audio: AudioHandle) -> Self {
         Self {
@@ -64,28 +65,14 @@ impl PlayerState {
         Ok(())
     }
 
-    /// Pauses playback and records the pause time
+    /// Toggles between play and pause
     ///
-    /// The elapsed time will be frozen at this point until resumed.
-    pub fn pause(&mut self) -> anyhow::Result<()> {
-        self.audio.pause()?;
-        if self.paused_at.is_none() {
-            self.paused_at = Some(Instant::now());
-        }
-        Ok(())
-    }
-
-    /// Resumes playback after pause
-    ///
-    /// Adjusts the start time to account for the paused duration,
-    /// so the progress continues from where it was paused.
-    pub fn resume(&mut self) -> anyhow::Result<()> {
-        self.audio.play()?;
-        if let (Some(started_at), Some(paused_at)) = (self.current_track_started_at, self.paused_at)
-        {
-            let paused_duration = paused_at.elapsed();
-            self.current_track_started_at = Some(started_at + paused_duration);
-            self.paused_at = None;
+    /// If currently playing, pauses. If paused, resumes.
+    pub fn toggle_play_pause(&mut self) -> anyhow::Result<()> {
+        if self.is_playing() {
+            self.pause()?;
+        } else {
+            self.resume()?;
         }
         Ok(())
     }
@@ -102,6 +89,32 @@ impl PlayerState {
     /// Shuts down the audio player and consumes the player state
     pub fn shutdown(self) -> anyhow::Result<()> {
         self.audio.shutdown()?;
+        Ok(())
+    }
+
+    /// Pauses playback and records the pause time
+    ///
+    /// The elapsed time will be frozen at this point until resumed.
+    fn pause(&mut self) -> anyhow::Result<()> {
+        self.audio.pause()?;
+        if self.paused_at.is_none() {
+            self.paused_at = Some(Instant::now());
+        }
+        Ok(())
+    }
+
+    /// Resumes playback after pause
+    ///
+    /// Adjusts the start time to account for the paused duration,
+    /// so the progress continues from where it was paused.
+    fn resume(&mut self) -> anyhow::Result<()> {
+        self.audio.play()?;
+        if let (Some(started_at), Some(paused_at)) = (self.current_track_started_at, self.paused_at)
+        {
+            let paused_duration = paused_at.elapsed();
+            self.current_track_started_at = Some(started_at + paused_duration);
+            self.paused_at = None;
+        }
         Ok(())
     }
 }
