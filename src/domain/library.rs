@@ -4,6 +4,7 @@ use crate::domain::DirEntry;
 
 pub const AUDIO_FILE_EXTENSIONS: &[&str] = &["mp3", "wav", "flac", "ogg"];
 
+/// File browser for navigating and listing audio files
 pub struct Library {
     current_dir: PathBuf,
     entries: Vec<DirEntry>,
@@ -38,6 +39,23 @@ impl Library {
     }
 
     pub fn get_entry(&self, index: usize) -> Option<&DirEntry> { self.entries.get(index) }
+
+    /// Collects audio tracks at the given indices
+    pub fn collect_audio_tracks(&self, indices: &[usize]) -> Vec<(String, PathBuf)> {
+        indices
+            .iter()
+            .filter_map(|&i| self.entries.get(i))
+            .filter(|e| e.is_audio())
+            .map(|e| (e.name.clone(), e.path.clone()))
+            .collect()
+    }
+
+    /// Collects all audio tracks in current directory
+    pub fn collect_all_audio_tracks(&self) -> Vec<(String, PathBuf)> {
+        self.audios()
+            .map(|e| (e.name.clone(), e.path.clone()))
+            .collect()
+    }
 
     fn refresh(&mut self) -> anyhow::Result<()> {
         self.entries.clear();

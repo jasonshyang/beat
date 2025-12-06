@@ -21,6 +21,7 @@ enum Command {
     Shutdown,
 }
 
+/// Shared audio playback state
 #[derive(Default)]
 pub struct AudioState {
     is_playing: AtomicBool,
@@ -36,6 +37,7 @@ impl AudioState {
     pub fn is_ended(&self) -> bool { self.is_ended.load(Ordering::Relaxed) }
 }
 
+/// Audio player managing rodio sink and playback thread
 pub struct AudioPlayer {
     sink: Sink,
     state: Arc<AudioState>,
@@ -77,8 +79,8 @@ impl AudioPlayer {
         Ok(self)
     }
 
-    fn play_track(&mut self, music: Track) -> anyhow::Result<()> {
-        let file = std::fs::File::open(&music.path)?;
+    fn play_track(&mut self, track: Track) -> anyhow::Result<()> {
+        let file = std::fs::File::open(&track.path)?;
         self.sink.clear();
         self.sink.append(rodio::Decoder::try_from(file)?);
         self.sink.play();
@@ -110,6 +112,7 @@ impl AudioPlayer {
     }
 }
 
+/// Handle for controlling audio playback from main thread
 pub struct AudioHandle {
     cmd_tx: Sender<Command>,
     player_handle: JoinHandle<anyhow::Result<AudioPlayer>>,
@@ -128,8 +131,8 @@ impl AudioHandle {
         Ok(())
     }
 
-    pub fn play_track(&self, music: Track) -> anyhow::Result<()> {
-        self.cmd_tx.send(Command::PlayTrack(music))?;
+    pub fn play_track(&self, track: Track) -> anyhow::Result<()> {
+        self.cmd_tx.send(Command::PlayTrack(track))?;
         Ok(())
     }
 

@@ -9,6 +9,7 @@ use lofty::{
 };
 use rodio::Source;
 
+/// Directory or audio file entry in the library
 pub struct DirEntry {
     pub name: String,
     pub path: PathBuf,
@@ -29,12 +30,14 @@ impl DirEntry {
     pub fn is_audio(&self) -> bool { matches!(self.ty, EntryType::Audio) }
 }
 
+/// Type of directory entry
 pub enum EntryType {
     Directory,
     Audio,
 }
 
-#[derive(Clone)]
+/// Audio track with metadata
+#[derive(Clone, Debug)]
 pub struct Track {
     pub name: String,
     pub path: PathBuf,
